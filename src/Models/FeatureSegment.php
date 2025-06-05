@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace CK\FilamentPennant\Models;
 
+use RuntimeException;
 use Laravel\Pennant\Feature;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use InvalidArgumentException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * CK\FilamentPennant\Models\FeatureSegment
@@ -132,6 +133,14 @@ class FeatureSegment extends Model
         return $scopes;
     }
 
+    protected function getColumnForScope(): string
+    {
+        return self::allScopes($this->feature, key: 'source.key_column')
+            ->map(fn (string $key, string $label) => [$key, $label])
+            ->keys()
+            ->firstOrFail();
+    }
+
     /**
      * Determines whether this segment should activate for the given scope.
      *
@@ -145,7 +154,7 @@ class FeatureSegment extends Model
      */
     public function resolve(mixed $scope): bool
     {
-        $scopePropertyValue = $scope->{$this->scope};
+        $scopePropertyValue = $scope->{$this->getColumnForScope()};
         $scopeMatchesSegmentValues = in_array($scopePropertyValue, $this->values, true);
 
         if ($this->active) {
