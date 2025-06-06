@@ -52,8 +52,6 @@ class FeatureSegmentResource extends Resource
 
             ...self::createSelectValuesFields(),
 
-            Hidden::make('reference'),
-
             Select::make('active')
                 ->label(__('Status'))
                 ->options([true => 'Activate', false => 'Deactivate'])
