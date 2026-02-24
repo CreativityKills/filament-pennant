@@ -44,7 +44,7 @@ trait AllowsFeatureSegmentResourceSchemaCustomizations
     }
 
     /**
-     * @param  array<\Filament\Forms\Components\Component>  $components
+     * @param  array<\Filament\Schemas\Components\Component>  $components
      */
     public static function featureSegmentFormComponents(array $components): array
     {
@@ -68,7 +68,7 @@ trait AllowsFeatureSegmentResourceSchemaCustomizations
     }
 
     /**
-     * @param  array<\Filament\Tables\Actions\Action>  $actions
+     * @param  array<\Filament\Actions\Action>  $actions
      */
     public static function featureSegmentTableActions(array $actions): array
     {
@@ -92,7 +92,7 @@ trait AllowsFeatureSegmentResourceSchemaCustomizations
     }
 
     /**
-     * @param  array<\Filament\Tables\Actions\Action|\Filament\Tables\Actions\ActionGroup>  $actions
+     * @param  array<\Filament\Actions\Action|\Filament\Actions\ActionGroup>  $actions
      */
     public static function featureSegmentTableHeaderActions(array $actions): array
     {
