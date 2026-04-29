@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace CK\FilamentPennant\Resources;
 
 use Filament\Tables;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Forms\Form;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Table;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Support\Enums\FontWeight;
 use Illuminate\Support\Facades\Config;
@@ -27,11 +28,11 @@ use CK\FilamentPennant\Events\FeatureSegmentDeleting;
 
 class FeatureSegmentResource extends Resource
 {
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $allFeatures = FilamentPennant::getFeatureSegmentModelInstance()->allFeatures();
 
-        $schema = FilamentPennant::featureSegmentFormComponents([
+        $components = FilamentPennant::featureSegmentFormComponents([
             Select::make('feature')
                 ->label(__('Select Feature'))
                 ->live()
@@ -66,7 +67,7 @@ class FeatureSegmentResource extends Resource
                 ->columnSpanFull(),
         ]);
 
-        return $form->schema($schema);
+        return $schema->components($components);
     }
 
     /**
@@ -159,10 +160,10 @@ class FeatureSegmentResource extends Resource
         ]);
 
         $actions = FilamentPennant::featureSegmentTableActions([
-            Tables\Actions\EditAction::make()
+            EditAction::make()
                 ->button()
                 ->after(fn ($record) => FeatureSegmentUpdated::dispatch($record, Filament::auth()->user())),
-            Tables\Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->button()
                 ->successNotification(fn () => Notification::make()->success()->title(__('Segment deleted successfully')))
                 ->before(fn ($record) => FeatureSegmentDeleting::dispatch($record, Filament::auth()->user()))
@@ -173,7 +174,7 @@ class FeatureSegmentResource extends Resource
             ->columns($columns)
             ->defaultSort('feature')
             ->filters($filters)
-            ->actions($actions);
+            ->recordActions($actions);
     }
 
     public static function getPages(): array
