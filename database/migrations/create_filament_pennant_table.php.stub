@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('featuresegments', function (Blueprint $table) {
+        Schema::create('feature_segments', function (Blueprint $table) {
             $table->id();
             $table->string('feature');
             $table->string('scope');
