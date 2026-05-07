@@ -41,7 +41,9 @@ class FilamentPennantServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         if (is_dir($this->app->path('Features'))) {
-            Feature::discover();
+            $namespace = rtrim($this->app->getNamespace(), '\\') . '\\Features';
+
+            Feature::discover($namespace, $this->app->path('Features'));
         }
 
         foreach (static::$customFeatureLocations as $namespace => $path) {
