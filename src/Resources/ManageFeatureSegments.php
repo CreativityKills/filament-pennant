@@ -39,7 +39,7 @@ class ManageFeatureSegments extends ManageRecords
             Select::make('feature')
                 ->label(__('Feature'))
                 ->selectablePlaceholder(false)
-                ->options(array_merge([null => __('All Features')], $allFeaturesOptionsList))
+                ->options(array_merge(['' => __('All Features')], $allFeaturesOptionsList))
                 ->columnSpanFull(),
         ];
 
@@ -59,7 +59,7 @@ class ManageFeatureSegments extends ManageRecords
                     ->requiresConfirmation()
                     ->color('danger')
                     ->modalDescription(fn () => __('This will activate the selected feature for everyone.'))
-                    ->form($activateForEveryoneSchema)
+                    ->schema($activateForEveryoneSchema)
                     ->modalSubmitActionLabel(__('Activate'))
                     ->action(fn ($data) => $this->activateForAll($data['feature'])),
 
@@ -70,7 +70,7 @@ class ManageFeatureSegments extends ManageRecords
                     ->requiresConfirmation()
                     ->color('danger')
                     ->modalDescription(fn () => __('This will deactivate the selected feature for everyone.'))
-                    ->form($deactivateForEveryoneSchema)
+                    ->schema($deactivateForEveryoneSchema)
                     ->modalSubmitActionLabel(__('Deactivate'))
                     ->action(fn ($data) => $this->deactivateForAll($data['feature'])),
 
@@ -81,7 +81,7 @@ class ManageFeatureSegments extends ManageRecords
                     ->requiresConfirmation()
                     ->color('danger')
                     ->modalDescription(fn () => __('This action will purge resolved features from storage.'))
-                    ->form($purgeFeaturesSchema)
+                    ->schema($purgeFeaturesSchema)
                     ->modalSubmitActionLabel(__('Purge'))
                     ->color('danger')
                     ->action(fn ($data) => $this->purgeFeatures($data['feature'])),
@@ -126,6 +126,8 @@ class ManageFeatureSegments extends ManageRecords
 
     private function purgeFeatures(?string $feature): void
     {
+        $feature = $feature ?: null;
+
         Feature::purge($feature);
 
         $featureTitle = is_null($feature) ? __('All features') : $feature::title();
